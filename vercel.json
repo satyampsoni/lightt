@@ -13,7 +13,7 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/game.js" },
     { "handle": "filesystem" },
-    { "src": "/presenter", "dest": "/public/presenter.html" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/presenter", "dest": "/presenter.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
