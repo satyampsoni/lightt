@@ -45,11 +45,7 @@
       50% { transform: scale(1.3); opacity: 1; }
     }
 
-    #waiting-screen h2 {
-      font-size: 1.5rem;
-      font-weight: 300;
-      opacity: 0.7;
-    }
+    #waiting-screen h2 { font-size: 1.5rem; font-weight: 300; opacity: 0.7; }
 
     /* Vote */
     #vote-screen { justify-content: stretch; }
@@ -90,21 +86,14 @@
       user-select: none;
     }
 
-    .vote-btn:active {
-      filter: brightness(0.85);
-      transform: scale(0.98);
-    }
+    .vote-btn:active { filter: brightness(0.85); transform: scale(0.98); }
 
     #btn-green { background: #2ecc71; }
     #btn-red { background: #e74c3c; }
 
     /* Voted */
     #voted-screen { text-align: center; }
-
-    #voted-screen .checkmark {
-      font-size: 5rem;
-      margin-bottom: 1rem;
-    }
+    #voted-screen .checkmark { font-size: 5rem; margin-bottom: 1rem; }
 
     #voted-screen h1 {
       font-size: 2rem;
@@ -114,29 +103,13 @@
     }
 
     /* Results */
-    #result-screen {
-      background: #1a1a2e;
-      text-align: center;
-      padding: 2rem;
-    }
-
-    #result-screen h2 {
-      font-size: 1.4rem;
-      font-weight: 300;
-      opacity: 0.7;
-      margin-bottom: 1rem;
-    }
-
+    #result-screen { background: #1a1a2e; text-align: center; padding: 2rem; }
+    #result-screen h2 { font-size: 1.4rem; font-weight: 300; opacity: 0.7; margin-bottom: 1rem; }
     #result-text { font-size: 2rem; font-weight: 700; }
 
     /* Session ended */
     #ended-screen { text-align: center; padding: 2rem; }
-
-    #ended-screen h1 {
-      font-size: 2rem;
-      font-weight: 300;
-      opacity: 0.7;
-    }
+    #ended-screen h1 { font-size: 2rem; font-weight: 300; opacity: 0.7; }
   </style>
 </head>
 <body>
@@ -170,50 +143,89 @@
     <h1>Thanks for participating!</h1>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    const API = '/api/game';
+    // Unique voter ID per browser session
+    let voterId = sessionStorage.getItem('voterId');
+    if (!voterId) {
+      voterId = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem('voterId', voterId);
+    }
+
+    let currentQuestion = null;
+    let hasVoted = false;
+    let pollTimer = null;
+    let currentScreen = 'waiting-screen';
 
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      currentScreen = id;
     }
 
-    socket.on('new-question', (question) => {
-      document.getElementById('question-text').textContent = question;
-      document.body.style.background = '#1a1a2e';
-      showScreen('vote-screen');
-    });
-
-    function vote(color) {
-      socket.emit('vote', color);
+    async function vote(color) {
+      if (hasVoted) return;
+      hasVoted = true;
       document.body.style.background = color === 'red' ? '#e74c3c' : '#2ecc71';
       showScreen('voted-screen');
+
+      try {
+        await fetch(`${API}?action=vote`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ color, voterId })
+        });
+      } catch {}
     }
 
-    socket.on('results', (votes) => {
-      const total = votes.red + votes.green;
-      if (total === 0) {
-        document.getElementById('result-text').textContent = 'No votes received';
-      } else {
-        const greenPct = Math.round((votes.green / total) * 100);
-        const redPct = 100 - greenPct;
-        document.getElementById('result-text').innerHTML =
-          `<span style="color:#2ecc71">YES ${greenPct}%</span> &mdash; <span style="color:#e74c3c">NO ${redPct}%</span>`;
-      }
-      document.body.style.background = '#1a1a2e';
-      showScreen('result-screen');
-    });
+    // Poll server for state changes
+    async function poll() {
+      try {
+        const res = await fetch(`${API}?action=status`);
+        const data = await res.json();
 
-    socket.on('reset', () => {
-      document.body.style.background = '#1a1a2e';
-      showScreen('waiting-screen');
-    });
+        if (!data.sessionActive) {
+          showScreen('ended-screen');
+          document.body.style.background = '#1a1a2e';
+          return;
+        }
 
-    socket.on('session-ended', () => {
-      document.body.style.background = '#1a1a2e';
-      showScreen('ended-screen');
-    });
+        // New question appeared
+        if (data.question && data.question !== currentQuestion && data.votingOpen) {
+          currentQuestion = data.question;
+          hasVoted = false;
+          document.getElementById('question-text').textContent = data.question;
+          document.body.style.background = '#1a1a2e';
+          showScreen('vote-screen');
+        }
+
+        // Voting closed — show results
+        if (data.question && !data.votingOpen && currentScreen !== 'result-screen' && currentScreen !== 'waiting-screen') {
+          const total = data.total;
+          if (total === 0) {
+            document.getElementById('result-text').textContent = 'No votes received';
+          } else {
+            const greenPct = Math.round((data.votes.green / total) * 100);
+            const redPct = 100 - greenPct;
+            document.getElementById('result-text').innerHTML =
+              `<span style="color:#2ecc71">YES ${greenPct}%</span> &mdash; <span style="color:#e74c3c">NO ${redPct}%</span>`;
+          }
+          document.body.style.background = '#1a1a2e';
+          showScreen('result-screen');
+        }
+
+        // Question was reset (between questions)
+        if (!data.question && currentQuestion !== null) {
+          currentQuestion = null;
+          document.body.style.background = '#1a1a2e';
+          showScreen('waiting-screen');
+        }
+      } catch {}
+    }
+
+    // Start polling
+    pollTimer = setInterval(poll, 800);
+    poll();
   </script>
 </body>
 </html>

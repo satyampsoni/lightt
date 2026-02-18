@@ -72,13 +72,8 @@
       transition: border-color 0.3s;
     }
 
-    #questions-input:focus {
-      border-color: rgba(255,255,255,0.3);
-    }
-
-    #questions-input::placeholder {
-      color: rgba(255,255,255,0.2);
-    }
+    #questions-input:focus { border-color: rgba(255,255,255,0.3); }
+    #questions-input::placeholder { color: rgba(255,255,255,0.2); }
 
     .question-count {
       font-size: 0.85rem;
@@ -102,12 +97,7 @@
       opacity: 0.5;
     }
 
-    #qr-setup {
-      border-radius: 16px;
-      background: #fff;
-      padding: 12px;
-      display: inline-block;
-    }
+    #qr-setup { border-radius: 16px; background: #fff; padding: 12px; display: inline-block; }
 
     #audience-url {
       font-size: 0.95rem;
@@ -133,31 +123,12 @@
       align-self: center;
     }
 
-    #start-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 30px rgba(102,126,234,0.4);
-    }
-
-    #start-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
+    #start-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(102,126,234,0.4); }
+    #start-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
 
     /* ===== LOBBY SCREEN ===== */
-    #lobby-screen {
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-    }
-
-    #lobby-screen h2 {
-      font-size: 2rem;
-      font-weight: 300;
-      opacity: 0.7;
-    }
-
+    #lobby-screen { align-items: center; justify-content: center; gap: 2rem; }
+    #lobby-screen h2 { font-size: 2rem; font-weight: 300; opacity: 0.7; }
     #lobby-qr { border-radius: 16px; background: #fff; padding: 12px; display: inline-block; }
 
     #lobby-url {
@@ -167,11 +138,6 @@
       word-break: break-all;
       text-align: center;
       max-width: 600px;
-    }
-
-    #lobby-count {
-      font-size: 1.2rem;
-      opacity: 0.5;
     }
 
     #begin-btn {
@@ -186,19 +152,12 @@
       transition: transform 0.15s, box-shadow 0.3s;
     }
 
-    #begin-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 30px rgba(46,204,113,0.4);
-    }
+    #begin-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(46,204,113,0.4); }
 
     /* ===== LIVE SCREEN ===== */
     #live-screen { align-items: center; }
 
-    #progress-bar {
-      width: 100%;
-      height: 4px;
-      background: rgba(255,255,255,0.08);
-    }
+    #progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.08); }
 
     #progress-fill {
       height: 100%;
@@ -230,12 +189,7 @@
       flex: 1;
     }
 
-    #vote-count {
-      font-size: 1.5rem;
-      font-weight: 300;
-      opacity: 0.6;
-      margin-bottom: 1.5rem;
-    }
+    #vote-count { font-size: 1.5rem; font-weight: 300; opacity: 0.6; margin-bottom: 1.5rem; }
 
     #countdown {
       font-size: 10rem;
@@ -317,31 +271,16 @@
       transition: background 0.2s, border-color 0.2s, transform 0.15s;
     }
 
-    #next-btn {
-      border: none;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #fff;
-    }
-
+    #next-btn { border: none; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
     #next-btn:hover { transform: scale(1.05); }
 
-    #finish-btn {
-      border: 2px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: #fff;
-      margin-left: 1rem;
-    }
-
+    #finish-btn { border: 2px solid rgba(255,255,255,0.2); background: transparent; color: #fff; margin-left: 1rem; }
     #finish-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
 
     .results-actions { display: flex; gap: 1rem; }
 
     /* ===== DONE SCREEN ===== */
-    #done-screen {
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-    }
+    #done-screen { align-items: center; justify-content: center; gap: 1.5rem; }
 
     #done-screen h1 {
       font-size: 3rem;
@@ -371,7 +310,7 @@
 </head>
 <body>
 
-  <!-- 1. SETUP: Enter questions + QR code -->
+  <!-- 1. SETUP -->
   <div id="setup-screen" class="screen active">
     <h1>Setup Your Session</h1>
     <div class="setup-body">
@@ -389,16 +328,15 @@
     <button id="start-btn" disabled onclick="startSession()">START SESSION</button>
   </div>
 
-  <!-- 2. LOBBY: Show QR big before first question -->
+  <!-- 2. LOBBY -->
   <div id="lobby-screen" class="screen">
     <h2>Scan to join</h2>
     <div id="lobby-qr"></div>
     <div id="lobby-url"></div>
-    <div id="lobby-count">0 connected</div>
     <button id="begin-btn" onclick="nextQuestion()">BEGIN</button>
   </div>
 
-  <!-- 3. LIVE: Question + countdown -->
+  <!-- 3. LIVE -->
   <div id="live-screen" class="screen">
     <div id="progress-bar"><div id="progress-fill" style="width:0%"></div></div>
     <div id="q-number">Question 1 of 5</div>
@@ -410,7 +348,7 @@
     </div>
   </div>
 
-  <!-- 4. RESULTS: Pie chart -->
+  <!-- 4. RESULTS -->
   <div id="results-screen" class="screen">
     <div id="result-question"></div>
     <div id="chart-area">
@@ -445,23 +383,29 @@
     <button id="restart-btn" onclick="location.reload()">NEW SESSION</button>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    const API = '/api/game';
     let questions = [];
     let currentIndex = -1;
     let currentVotes = { red: 0, green: 0 };
     let countdownTimer = null;
+    let pollTimer = null;
     let audienceUrl = '';
-    let connectedCount = 0;
 
-    // --- Screens ---
+    // --- Helpers ---
+    async function api(action, body) {
+      const opts = body
+        ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+        : { method: 'GET' };
+      const res = await fetch(`${API}?action=${action}`, opts);
+      return res.json();
+    }
+
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // --- QR Code ---
     function generateQR(elementId, url, size) {
       const el = document.getElementById(elementId);
       el.innerHTML = '';
@@ -475,7 +419,7 @@
       });
     }
 
-    // --- Init: Render QR with the current page origin ---
+    // --- Init ---
     function init() {
       audienceUrl = window.location.origin;
       document.getElementById('audience-url').textContent = audienceUrl;
@@ -494,26 +438,37 @@
       startBtn.disabled = lines.length === 0;
     });
 
-    // --- Start session: parse questions, show lobby ---
+    // --- Start session ---
     function startSession() {
       questions = textarea.value.split('\n').map(l => l.trim()).filter(Boolean);
       if (questions.length === 0) return;
       currentIndex = -1;
 
-      // Show lobby with big QR
       document.getElementById('lobby-url').textContent = audienceUrl;
       generateQR('lobby-qr', audienceUrl, 320);
       showScreen('lobby-screen');
     }
 
-    // --- Track connected users ---
-    socket.on('connected-count', (count) => {
-      connectedCount = count;
-      document.getElementById('lobby-count').textContent = count + ' connected';
-    });
+    // --- Poll for vote updates during countdown ---
+    function startPolling() {
+      stopPolling();
+      pollTimer = setInterval(async () => {
+        try {
+          const data = await api('status');
+          currentVotes = data.votes;
+          const total = data.total;
+          document.getElementById('vote-count').textContent =
+            total + ' vote' + (total !== 1 ? 's' : '');
+        } catch {}
+      }, 500);
+    }
+
+    function stopPolling() {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
 
     // --- Next question ---
-    function nextQuestion() {
+    async function nextQuestion() {
       currentIndex++;
 
       if (currentIndex >= questions.length) {
@@ -524,7 +479,8 @@
       const question = questions[currentIndex];
       currentVotes = { red: 0, green: 0 };
 
-      socket.emit('ask-question', question);
+      // Tell server about the new question
+      await api('question', { question });
 
       // Update UI
       document.getElementById('q-number').textContent =
@@ -535,7 +491,6 @@
       document.getElementById('vote-count').textContent = '0 votes';
       document.getElementById('countdown').textContent = '5';
 
-      // Hide/show next button on last question
       if (currentIndex >= questions.length - 1) {
         document.getElementById('next-btn').textContent = 'FINISH';
       } else {
@@ -543,28 +498,24 @@
       }
 
       showScreen('live-screen');
+      startPolling();
 
       // 5-second countdown
       let seconds = 5;
       clearInterval(countdownTimer);
-      countdownTimer = setInterval(() => {
+      countdownTimer = setInterval(async () => {
         seconds--;
         document.getElementById('countdown').textContent = seconds;
         if (seconds <= 0) {
           clearInterval(countdownTimer);
-          socket.emit('show-results');
+          stopPolling();
+          // Close voting and get final results
+          const result = await api('close');
+          currentVotes = result.votes;
           showResults();
         }
       }, 1000);
     }
-
-    // --- Vote updates ---
-    socket.on('vote-update', (votes) => {
-      currentVotes = votes;
-      const total = votes.red + votes.green;
-      document.getElementById('vote-count').textContent =
-        total + ' vote' + (total !== 1 ? 's' : '');
-    });
 
     // --- Show results ---
     function showResults() {
@@ -578,7 +529,6 @@
       document.getElementById('red-pct').textContent = redPct + '%';
 
       showScreen('results-screen');
-      // Wait for browser to complete layout before drawing
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           drawPieChart(greenPct, redPct, total);
@@ -590,7 +540,6 @@
     function drawPieChart(greenPct, redPct, total) {
       const canvas = document.getElementById('pie-canvas');
       const container = document.getElementById('pie-container');
-      // Use container's computed size; fall back to a fixed size if still 0
       let size = container.clientWidth;
       if (size <= 0) {
         size = Math.min(window.innerHeight * 0.5, window.innerWidth * 0.5);
@@ -624,7 +573,6 @@
       const greenAngle = (greenPct / 100) * Math.PI * 2;
       const startAngle = -Math.PI / 2;
 
-      // Green slice (YES)
       if (greenPct > 0) {
         ctx.beginPath();
         ctx.arc(cx, cy, radius, startAngle, startAngle + greenAngle);
@@ -634,7 +582,6 @@
         ctx.fill();
       }
 
-      // Red slice (NO)
       if (redPct > 0) {
         ctx.beginPath();
         ctx.arc(cx, cy, radius, startAngle + greenAngle, startAngle + Math.PI * 2);
@@ -646,9 +593,10 @@
     }
 
     // --- End session ---
-    function endSession() {
+    async function endSession() {
       clearInterval(countdownTimer);
-      socket.emit('end-session');
+      stopPolling();
+      await api('end');
       showScreen('done-screen');
     }
   </script>
