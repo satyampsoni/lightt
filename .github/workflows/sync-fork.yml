@@ -1,0 +1,37 @@
+name: Sync Fork with Upstream
+
+on:
+  # Run daily at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Sync fork with upstream
+        uses: tgymnich/fork-sync@v2.0
+        with:
+          owner: saiyam1814
+          base: light
+          head: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Log sync status
+        if: always()
+        run: |
+          echo "Fork sync workflow completed"
+          echo "Status: ${{ job.status }}"
