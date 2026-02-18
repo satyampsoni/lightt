@@ -1,11 +1,11 @@
 name: Sync Fork with Upstream
 
 on:
-  # Run daily at midnight UTC
+  # Run every hour to sync changes quickly
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 * * * *'
   
-  # Allow manual triggering
+  # Allow manual triggering for immediate sync
   workflow_dispatch:
 
 permissions:
