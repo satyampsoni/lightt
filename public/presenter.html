@@ -475,23 +475,9 @@
       });
     }
 
-    // --- Init: Fetch audience URL and render QR ---
-    async function init() {
-      const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-      if (isLocal) {
-        // On localhost, use LAN IP so phones on same Wi-Fi can connect
-        try {
-          const res = await fetch('/api/info');
-          const info = await res.json();
-          audienceUrl = info.url;
-        } catch {
-          audienceUrl = window.location.origin;
-        }
-      } else {
-        // On production (Vercel etc.), use the public origin
-        audienceUrl = window.location.origin;
-      }
-
+    // --- Init: Render QR with the current page origin ---
+    function init() {
+      audienceUrl = window.location.origin;
       document.getElementById('audience-url').textContent = audienceUrl;
       generateQR('qr-setup', audienceUrl, 220);
     }
